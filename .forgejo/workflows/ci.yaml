@@ -1,0 +1,38 @@
+# Run the same clean, lockfile-pinned checks exposed by `just ci`.
+name: CI
+
+on:
+    push:
+        branches: [main, "release/**"]
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: https://data.forgejo.org/actions/checkout@v4
+
+            - uses: https://github.com/DeterminateSystems/nix-installer-action@v22
+              with:
+                  extra-conf: experimental-features = nix-command flakes
+
+            - name: Run checks
+              run: nix develop --no-write-lock-file --command just ci
+
+            - name: Generate coverage reports after merge
+              if: ${{ github.event_name == 'push' }}
+              run: nix develop --no-write-lock-file --command just ci-coverage
+
+            - name: Upload coverage reports
+              if: ${{ github.event_name == 'push' }}
+              uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+              with:
+                  name: coverage-reports
+                  path: |
+                      coverage/lcov.info
+                      coverage/cobertura-coverage.xml
+                  if-no-files-found: error

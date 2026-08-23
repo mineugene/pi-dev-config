@@ -1,0 +1,20 @@
+# Node (package-lock.json is committed for reproducible installs and CI)
+/node_modules/
+npm-debug.log*
+
+# Vitest coverage reports
+/coverage/
+
+# Nix build outputs (`nix build` symlinks)
+/result
+/result-*
+
+# direnv / nix-direnv and generated git-hooks.nix config
+/.direnv/
+/.envrc.local
+/.pre-commit-config.yaml
+
+# Graphify generated graph, reports, caches, and temporary extraction files
+/graphify-out/
+/.graphify_*.json
+/.graphify_*.txt
