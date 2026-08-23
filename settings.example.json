@@ -1,0 +1,17 @@
+{
+    "//externalEditor": "Command Alt+E opens for the current prompt. Falls back to $VISUAL, then $EDITOR, then nano. Include --wait for GUI editors (e.g. 'code --wait').",
+    "externalEditor": "nvim",
+
+    "packages": ["https://git.eugenemin.xyz/mineugene/pi-dev-config.git"],
+
+    "theme": "tokyo-night",
+    "defaultThinkingLevel": "medium",
+    "autocompleteMaxVisible": 20,
+    "compaction": {
+        "enabled": true,
+        "reserveTokens": 16384,
+        "keepRecentTokens": 24000
+    },
+    "//modelOverrides": "Per-model compaction budgets keyed by exact provider/modelId, falling back per field to the ordinary settings. Raise reserveTokens for models whose advertised window exceeds the provider's real limit, e.g. { \"anthropic/claude-opus-5.5\": { \"reserveTokens\": 400000 } }.",
+    "enabledModels": ["claude-*", "gpt-*", "gemini-*"]
+}
