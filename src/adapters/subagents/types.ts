@@ -1,0 +1,136 @@
+/**
+ * types.ts — Type definitions for the subagent system.
+ */
+
+import type { ThinkingLevel } from "@earendil-works/pi-agent-core";
+import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import { isEffortLevel } from "../../domain/effort.ts";
+import type { LifetimeUsage } from "./usage.ts";
+
+export type { ThinkingLevel };
+
+export const isThinkingLevel = isEffortLevel;
+
+/** Agent type: any string name (built-in defaults or user-defined). */
+export type SubagentType = string;
+
+/** Isolation mode for agent execution. */
+export type IsolationMode = "worktree";
+
+export type BashGatePolicy = "deny" | "prompt";
+
+/** Unified agent configuration — used for both default and user-defined agents. */
+export interface AgentConfig {
+    name: string;
+    displayName?: string;
+    description: string;
+    builtinToolNames?: string[];
+    /** Tool denylist — these tools are removed even if `builtinToolNames` or extensions include them. */
+    disallowedTools?: string[];
+    /** true = inherit all, string[] = only listed, false = none */
+    extensions: true | string[] | false;
+    /** true = inherit all, string[] = only listed, false = none */
+    skills: true | string[] | false;
+    model?: string;
+    thinking?: string;
+    /** Persist this subagent as a normal pi session instead of keeping it in memory only. */
+    persistSession?: boolean;
+    /** Optional session directory used when persistSession is true. Omitted = pi's normal session location. */
+    sessionDir?: string;
+    systemPrompt: string;
+    promptMode: "replace" | "append";
+    /** Default for spawn: fork parent conversation. undefined = caller decides. */
+    inheritContext?: boolean;
+    /** Default for spawn: run in background. undefined = caller decides. */
+    runInBackground?: boolean;
+    /** Default for spawn: no extension tools. undefined = caller decides. */
+    isolated?: boolean;
+    /** Gated bash policy for this subagent. */
+    bashGatePolicy?: BashGatePolicy;
+    /** Isolation mode — "worktree" runs the agent in a temporary git worktree */
+    isolation?: IsolationMode;
+    /** true = this is an embedded default agent (informational) */
+    isDefault?: boolean;
+    /** false = agent is hidden from the registry */
+    enabled?: boolean;
+    /** Where this agent was loaded from */
+    source?: "default" | "project" | "global";
+}
+
+export type JoinMode = "async" | "smart";
+
+export interface AgentRecord {
+    id: string;
+    type: SubagentType;
+    description: string;
+    status: "queued" | "running" | "completed" | "stopped" | "error";
+    result?: string | undefined;
+    error?: string | undefined;
+    toolUses: number;
+    startedAt: number;
+    completedAt?: number | undefined;
+    session?: AgentSession | undefined;
+    abortController?: AbortController;
+    promise?: Promise<string>;
+    groupId?: string;
+    /** Set when result was already consumed via get_subagent_result — suppresses completion notification. */
+    resultConsumed?: boolean;
+    /** Steering messages queued before the session was ready. */
+    pendingSteers?: string[] | undefined;
+    /** Message to resume with after cancelling the current operation. */
+    pendingCancelSteer?: string | undefined;
+    /** Worktree info if the agent is running in an isolated worktree. */
+    worktree?: { path: string; branch: string; baseSha: string };
+    /** Worktree cleanup result after agent completion. */
+    worktreeResult?: { hasChanges: boolean; branch?: string };
+    /** The tool_use_id from the original Agent tool call. */
+    toolCallId?: string;
+    /** Path to the streaming output transcript file. */
+    outputFile?: string;
+    /** Cleanup function for the output file stream subscription. */
+    outputCleanup?: (() => void) | undefined;
+    /**
+     * Lifetime usage breakdown, accumulated via `message_end` events. Survives
+     * compaction. Total = input + output + cacheWrite (cacheRead deliberately
+     * excluded — see issue #38). Initialized to zeros at spawn.
+     */
+    lifetimeUsage: LifetimeUsage;
+    /** Number of times this agent's session has compacted. Initialized to 0 at spawn. */
+    compactionCount: number;
+    /** Whether this agent was spawned to run in the background. */
+    isBackground: boolean;
+    /** Resolved spawn params, captured for UI display. Fixed at spawn time. */
+    invocation?: AgentInvocation;
+}
+
+export interface AgentInvocation {
+    /** Full effective provider/model identifier. */
+    modelName?: string;
+    thinking?: ThinkingLevel;
+    isolated?: boolean;
+    inheritContext?: boolean;
+    runInBackground?: boolean;
+    isolation?: IsolationMode;
+}
+
+/** Details attached to custom notification messages for visual rendering. */
+export interface NotificationDetails {
+    id: string;
+    description: string;
+    status: string;
+    toolUses: number;
+    turnCount: number;
+    totalTokens: number;
+    durationMs: number;
+    outputFile?: string;
+    error?: string;
+    resultPreview: string;
+    /** Additional agents in a group notification. */
+    others?: NotificationDetails[];
+}
+
+export interface EnvInfo {
+    isGitRepo: boolean;
+    branch: string;
+    platform: string;
+}
