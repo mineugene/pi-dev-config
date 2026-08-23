@@ -1,0 +1,34 @@
+# Coverage is advisory until enabled as a required branch-protection status check.
+name: Coverage
+
+on:
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    coverage:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: https://data.forgejo.org/actions/checkout@v4
+
+            - uses: https://github.com/DeterminateSystems/nix-installer-action@v22
+              with:
+                  extra-conf: experimental-features = nix-command flakes
+
+            - name: Install dependencies
+              run: nix develop --no-write-lock-file --command just install
+
+            - name: Generate coverage reports
+              run: nix develop --no-write-lock-file --command just ci-coverage
+
+            - name: Upload coverage reports
+              uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+              with:
+                  name: coverage-reports
+                  path: |
+                      coverage/lcov.info
+                      coverage/cobertura-coverage.xml
+                  if-no-files-found: error

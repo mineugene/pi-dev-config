@@ -1,0 +1,62 @@
+{
+    "name": "pi-dev-config",
+    "version": "0.1.0",
+    "description": "Personal pi coding-agent harness config: vim keybindings, EDITOR prompt hand-off, fff-backed @ mentions and grep, plan todos, a less-noisy read tool, and a model/context/usage/git status line.",
+    "keywords": [
+        "pi-package"
+    ],
+    "license": "MIT",
+    "author": "Eugene Min <contact@eugenemin.xyz>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://git.eugenemin.xyz/mineugene/pi-dev-config.git"
+    },
+    "type": "module",
+    "bin": {
+        "pi-session-tracker": "./src/infra/session-tracker/cli.ts"
+    },
+    "scripts": {
+        "dev": "pi --no-extensions -e ./src/index.ts",
+        "lint": "biome lint . && nixfmt --check --indent=4 flake.nix",
+        "lint:fix": "biome lint --write . && nixfmt --indent=4 flake.nix",
+        "fmt": "biome format --write . && nixfmt --indent=4 flake.nix",
+        "fmt:check": "biome format . && nixfmt --check --indent=4 flake.nix",
+        "fix": "biome check --write . && nixfmt --indent=4 flake.nix",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run --dir src",
+        "check": "biome check . && nixfmt --check --indent=4 flake.nix && tsc --noEmit && vitest run --dir src"
+    },
+    "dependencies": {
+        "@ff-labs/fff-node": "0.10.5",
+        "tree-sitter-bash": "^0.25.1",
+        "web-tree-sitter": "^0.26.8"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.4",
+        "@earendil-works/pi-agent-core": "^0.84.2",
+        "@types/node": "^22.10.0",
+        "@vitest/coverage-v8": "^4.1.10",
+        "typescript": "^5.7.0",
+        "vitest": "^4.1.10"
+    },
+    "peerDependencies": {
+        "@earendil-works/pi-ai": "*",
+        "@earendil-works/pi-coding-agent": "*",
+        "@earendil-works/pi-tui": "*",
+        "typebox": "*"
+    },
+    "pi": {
+        "extensions": [
+            "./src/index.ts"
+        ],
+        "prompts": [
+            "./prompts"
+        ],
+        "skills": [
+            "./skills"
+        ],
+        "themes": [
+            "./themes"
+        ]
+    }
+}

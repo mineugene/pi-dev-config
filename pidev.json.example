@@ -1,0 +1,34 @@
+{
+    "//disable": "No features are disabled by default. Add feature names here to turn them off.",
+    "//routing": "Name any number of presets under routing.presets and select one with /routing-preset.",
+    "routing": {
+        "defaultPreset": "general",
+        "presets": {
+            "general": {
+                "base": { "model": "openai/gpt-5.6-terra", "thinkingLevel": "high" },
+                "fast": { "model": "openai/gpt-5.6-luna", "thinkingLevel": "low" },
+                "deep": { "model": "openai/gpt-5.6-sol", "thinkingLevel": "max" }
+            }
+        },
+        "failureThreshold": 2,
+        "correctionThreshold": 2,
+        "cacheTtlMinutes": 5
+    },
+    "//promptSlim": "Omit generic Pi docs on coding turns; /pi restores them. Set false to disable.",
+    "promptSlim": { "enabled": true },
+    "//web": "Brave web_search needs WEB_SEARCH_API_KEY. web_read stays static and bounded.",
+    "web": {
+        "search": { "limit": 5 },
+        "read": { "maxTokens": 6000, "maxResponseBytes": 2097152, "timeoutMs": 10000 }
+    },
+    "//statusline": "Optional per-theme pill colours. rgb is truecolour; ansi256 is the 256-colour fallback.",
+    "statusline": {
+        "palettes": {
+            "tokyo-night": {
+                "outer": { "rgb": [12, 14, 20], "ansi256": 233 },
+                "inner": { "rgb": [22, 22, 30], "ansi256": 234 }
+            }
+        }
+    },
+    "disable": []
+}

@@ -1,0 +1,16 @@
+{
+    "//externalEditor": "Command Ctrl+G opens for the current prompt. Falls back to $VISUAL, then $EDITOR, then nano. Include --wait for GUI editors (e.g. 'code --wait').",
+    "externalEditor": "nvim",
+
+    "packages": ["https://git.eugenemin.xyz/mineugene/pi-dev-config.git"],
+
+    "theme": "tokyo-night",
+    "defaultThinkingLevel": "medium",
+    "autocompleteMaxVisible": 20,
+    "compaction": {
+        "enabled": true,
+        "reserveTokens": 16384,
+        "keepRecentTokens": 16000
+    },
+    "enabledModels": ["claude-*", "gpt-5*", "gemini-2*"]
+}
