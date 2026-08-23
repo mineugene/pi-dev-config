@@ -1,0 +1,52 @@
+{
+    "//disable": "No features are disabled by default.",
+    "//routing": "Each preset needs base; fast, escalated, and deep are optional. Select one with /routing-preset.",
+    "routing": {
+        "defaultPreset": "general",
+        "presets": {
+            "general": {
+                "fast": { "model": "openai/gpt-5.6-luna", "thinkingLevel": "low" },
+                "base": { "model": "openai/gpt-5.6-terra", "thinkingLevel": "medium" },
+                "escalated": { "model": "openai/gpt-5.6-terra", "thinkingLevel": "max" },
+                "deep": {
+                    "model": "openai/gpt-5.6-sol",
+                    "thinkingLevel": "max",
+                    "cacheTtlMinutes": 10
+                }
+            }
+        },
+        "failureThreshold": 2,
+        "correctionThreshold": 2,
+        "stagnationThreshold": 2,
+        "cacheTtlMinutes": 5
+    },
+    "//permissions": "auto allows routine project work; hard credential, privilege, and catastrophic-operation denials still apply.",
+    "permissions": {
+        "mode": "auto",
+        "effects": {
+            "credential": "deny",
+            "privileged": "deny",
+            "external-path": "ask",
+            "network": "ask"
+        }
+    },
+    "//promptSlim": "Omit generic Pi docs on coding turns; /pi restores them. Set false to disable.",
+    "promptSlim": { "enabled": true },
+    "//web": "Brave web_search needs WEB_SEARCH_API_KEY. web_read stays static and bounded.",
+    "web": {
+        "search": { "limit": 5 },
+        "read": { "maxTokens": 6000, "maxResponseBytes": 2097152, "timeoutMs": 10000 }
+    },
+    "//statusline": "Optional per-theme pill colours. rgb is truecolour; ansi256 is the 256-colour fallback.",
+    "statusline": {
+        "palettes": {
+            "tokyo-night": {
+                "outer": { "rgb": [12, 14, 20], "ansi256": 233 },
+                "inner": { "rgb": [22, 22, 30], "ansi256": 234 }
+            }
+        }
+    },
+    "//timer": "Elapsed timers are on by default. workingVerbs: a non-empty array replaces the built-in 200-verb rotation; false keeps the plain Working text.",
+    "timer": { "enabled": true },
+    "disable": []
+}
